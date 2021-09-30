@@ -24,7 +24,7 @@ int main() {
 
     for(;;) {
         len = sizeof(cli_addr);
-        conn_fd = Accept(listen_fd, (SA *) &serv_addr, &len);
+        conn_fd = Accept(listen_fd, (SA *) &cli_addr, &len);
         if (conn_fd < 0) {
             printf("accept error");
             break;
