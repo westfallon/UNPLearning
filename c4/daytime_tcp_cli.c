@@ -2,6 +2,7 @@
 // 时间获取客户程序
 
 #include "unp.h"
+#include "sockfd_to_family.c"
 
 int main(int argc, char **argv) {
     int socket_fd, n;
@@ -26,6 +27,8 @@ int main(int argc, char **argv) {
     if (connect(socket_fd, (SA *) &serv_addr, sizeof(serv_addr)) < 0) {
         err_sys("connect error");
     }
+
+    printf("socket's family number is %d\n", sockfd_to_family(socket_fd));
 
     while ((n = read(socket_fd, recv_line, MAXLINE)) > 0) {
         recv_line[n] = 0;
