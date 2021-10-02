@@ -41,7 +41,13 @@ int main() {
 
     for ( ; ; ) {
         cli_len = sizeof(cli_addr);
-        conn_fd = Accept(listen_fd, (SA *) &cli_addr, &cli_len);
+        if ((conn_fd = accept(listen_fd, (SA *) &cli_addr, &cli_len)) < 0) {
+            if (errno == EINTR) {
+                continue;
+            } else {
+                err_sys("accept error");
+            }
+        }
         if ((child_pid = Fork()) == 0) { // child process
             Close(listen_fd);
             str_echo(conn_fd);
