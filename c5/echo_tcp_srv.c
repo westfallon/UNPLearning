@@ -3,6 +3,15 @@
 
 #include "unp.h"
 
+void sig_child(int signo) {
+    pid_t pid;
+    int stat;
+
+    pid = wait(&stat);
+    printf("child %d terminated\n", pid);
+    return;
+}
+
 // 在socket上回射数据
 void str_echo(int socket_fd) {
     ssize_t n;
@@ -38,6 +47,8 @@ int main() {
     Bind(listen_fd, (SA *) &serv_addr, sizeof(serv_addr));
 
     Listen(listen_fd, LISTENQ);
+
+    Signal(SIGCHLD, sig_child);
 
     for ( ; ; ) {
         cli_len = sizeof(cli_addr);
