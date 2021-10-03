@@ -31,6 +31,44 @@ void str_cli(FILE *fp, int socket_fd) {
     }
 }
 
+void new_ser_cli(FILE *fp, int socket_fd) {
+    int max_fdp1, stdin_eof;
+    fd_set r_set;
+    char buf[MAXLINE];
+    int n;
+
+    stdin_eof = 0;
+    FD_ZERO(&r_set);
+    for ( ; ; ) {
+        if (stdin_eof == 0) {
+            FD_SET(fileno(fp), &r_set);
+        }
+        FD_SET(socket_fd, &r_set);
+        max_fdp1 = max(fileno(fp), socket_fd);
+        Select(max_fdp1, &r_set, NULL, NULL, NULL);
+
+        if (FD_ISSET(socket_fd, &r_set)) {
+            if ((n = Read(socket_fd, buf, MAXLINE)) == 0) {
+                if (stdin_eof == 1) {
+                    return;
+                }
+                err_quit("str_cli: server terminated prematurely");
+            }
+            Write(fileno(stdout), buf, n);
+        }
+
+        if (FD_ISSET(fileno(fp), &r_set)) {
+            if ((n = Read(fileno(fp), buf, MAXLINE)) == 0) {
+                stdin_eof = 1;
+                Shutdown(socket_fd, SHUT_WR);
+                FD_CLR(fileno(fp), &r_set);
+                continue;
+            }
+            Writen(socket_fd, buf, n);
+        }
+    }
+}
+
 int main(int argc, char **argv) {
     int socket_fd;
     struct sockaddr_in serv_addr;
