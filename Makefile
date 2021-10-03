@@ -25,3 +25,8 @@ run_echo_cli:
 	mkdir -p target/c5 \
 	&& gcc c5/echo_tcp_cli.c -o target/c5/echo_cli -lunp \
 	&& ./target/c5/echo_cli 127.0.0.1
+
+run_select_echo_cli:
+	mkdir -p target/c6 \
+	&& gcc c6/echo_tcp_cli_select.c -o target/c6/select_echo_cli -lunp \
+	&& ./target/c6/select_echo_cli 127.0.0.1
