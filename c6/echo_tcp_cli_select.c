@@ -3,6 +3,14 @@
 
 #include "unp.h"
 
+/*
+ * !!错误版本!!
+ * 存在问题
+ * 1、readline()和fgets()有缓冲区，而select只是从read的角度指出是否有数据可读，
+ *    而不是从fgets()之类的调用的角度考虑
+ * 2、考虑批量输入的情况，在标准输入出现EOF(即客户端输入结束)后，会调用return结束函数，
+ *    但此时可能有应答未接收到，从而出现错误
+ * */
 void str_cli(FILE *fp, int socket_fd) {
     int max_fdp1;
     fd_set r_set;
@@ -31,6 +39,13 @@ void str_cli(FILE *fp, int socket_fd) {
     }
 }
 
+/*
+ * !!正确版本!!
+ * 1、使用read来替代readline()和fgets()
+ * 2、使用shutdown()实现关闭TCP连接的一般，表示客户端输入完成
+ * 3、标准输入完成(stdin_eof == 0)并且socket数据接收完成时再退出函数，
+ *    防止退出后有数据未接收到
+ * */
 void new_ser_cli(FILE *fp, int socket_fd) {
     int max_fdp1, stdin_eof;
     fd_set r_set;
