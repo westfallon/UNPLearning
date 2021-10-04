@@ -30,3 +30,8 @@ run_select_echo_cli:
 	mkdir -p target/c6 \
 	&& gcc c6/echo_tcp_cli_select.c -o target/c6/select_echo_cli -lunp \
 	&& ./target/c6/select_echo_cli 127.0.0.1
+
+run_select_echo_srv:
+	mkdir -p target/c6 \
+	&& gcc c6/echo_tcp_srv_select.c -o target/c6/select_echo_srv -lunp \
+	&& ./target/c6/select_echo_srv
