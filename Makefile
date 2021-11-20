@@ -40,3 +40,13 @@ run_poll_echo_srv:
 	mkdir -p target/c6 \
 	&& gcc c6/echo_tcp_srv_poll.c -o target/c6/poll_echo_srv -lunp \
 	&& ./target/c6/poll_echo_srv
+
+run_udp_echo_srv:
+	mkdir -p target/c8 \
+	&& gcc c8/echo_udp_srv.c -o target/c8/udp_echo_srv -lunp \
+	&& ./target/c8/udp_echo_srv
+
+run_udp_echo_cli:
+	mkdir -p target/c8 \
+	&& gcc c8/echo_udp_cli.c -o target/c8/udp_echo_cli -lunp \
+	&& ./target/c8/udp_echo_cli 127.0.0.1
